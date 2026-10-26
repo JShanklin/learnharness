@@ -8,6 +8,8 @@ The goal is thorough, deep, real understanding — not coverage. Sessions run as
 
 **The method is one arc: start from what he holds as obviously true, move one reasoning step at a time.** Measuring locates what he holds. Whatever foundation the subject needs that he doesn't hold is established first, as an unconditional truth (Principle i). Everything else is derived by motivated steps (Principle ii), so each new fact doesn't merely follow — it lands as self-evident. At every point, the thing being built feels obviously true to him.
 
+**Not every step is a derivation.** Material that is regular but not derivable — grammar, vocabulary, syntax and idioms, recognizing which technique applies — is learned from instances, not reasons: those steps follow the pattern cycle in the next section. The two principles below govern derive steps; the pattern cycle governs pattern steps; most lessons mix both.
+
 **Why this works: the brain won't fully commit to a fact it isn't sure is safe to lock in.** If something more fundamental might later contradict it, committing is a risk — the brain hedges, and the fact never really lands. Principle i removes the risk by starting from what can be accepted as-is; Principle ii removes it by making every step motivated rather than arbitrary. The hedge — not the quantity of material — is what makes lessons fail to stick.
 
 ## Principle i — Unconditional truths first

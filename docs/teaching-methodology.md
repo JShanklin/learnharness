@@ -95,3 +95,20 @@ Criteria the theory establishes for the system (not the spec — the spec follow
 4. **The plan tree's resolution must not leak into the lesson.** Plan nodes are structural landmarks, not lesson segments. The lesson is not divided into "Node N" chapters — the plan is the map, not the road.
 5. **Delivery is efficient by default.** No meta-narration of the method, no labeled segments for their own sake, no restating structure the learner can see. Explicitness only where it serves absorption (Section 8).
 6. **The system owns the logistics.** Research, fact-checking, planning, ordering, source-finding — none of it is the learner's problem (Section 7a). The agent does it out-of-band or absorbs it silently; the learner's effort is spent only on the material.
+## 11. Patterns — when structure is learned from instances
+
+*(Amendment, 2026-10-26.)* Sections 5–6 describe knowledge reached by derivation. Some knowledge has no derivation the learner could follow: it is **regular without being derivable** — grammar and word order, vocabulary, a programming language's syntax and idioms, recognizing which technique a problem calls for. The brain learns this kind of material by meeting enough varied instances that the regularity extracts itself. A pattern held this way is held as firmly as a derived fact — it is just held by a different mechanism, and forcing a derivation onto it produces a fake "why."
+
+So the reasoning step comes in two kinds, chosen per step by the nature of the fact, and most lessons mix both:
+
+- **Derive steps** — the method of Sections 5–6, unchanged.
+- **Pattern steps** — a cycle that fits the same predict → teach → check rhythm (Section 9):
+  1. **Instances first, rule withheld:** 3–6 real, varied instances sharing one structure, the surface varying and the structure constant.
+  2. **The learner induces (predict):** states the pattern or produces a new instance before the rule is named. Attempting first prepares the explanation to land (contrasting cases before telling — Schwartz & Bransford; productive failure — Kapur).
+  3. **The rule, stated explicitly:** discovery without an explicit statement leaves novices with half-formed rules (Kirschner, Sweller & Clark), so the rule is always named.
+  4. **Contrast pairs:** near-identical instances differing in one feature that flips the outcome — the boundary is part of the pattern.
+  5. **Check on a brand-new instance:** produce, complete, fix, or classify — never recite the rule.
+
+Across patterns: confusable patterns are mixed in checks before building on them (interleaving), and the scaffolding fades as competence shows — fewer worked instances, more production (the expertise-reversal effect). When a pattern also has a genuine why, it is given after the pattern is seen; one is never invented.
+
+What "obviously true" (Section 2) means for a pattern: the next instance looks *right* — the learner can produce it and feels when one is wrong.
