@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { MenuShell } from "@/components/menu-shell";
 import { DeleteSessionDialog } from "@/components/delete-session-dialog";
 import type { ChatDeleteMode } from "@/src/core";
-import { DumbbellIcon, PanelLeftCloseIcon, PanelLeftOpenIcon, PlusIcon, SearchIcon, SettingsIcon } from "lucide-react";
+import { DumbbellIcon, PanelLeftCloseIcon, PanelLeftOpenIcon, PlusIcon, RotateCcwIcon, SearchIcon, SettingsIcon } from "lucide-react";
 import { ActivitySection } from "@/components/activity-dock";
 import { CoverageMenuBlock } from "@/components/extraction-coverage";
 import { LhMark } from "@/components/lh-mark";
@@ -274,6 +274,35 @@ function sessionMeta(chat: ChatListItem): string {
  * state-aware meta. Exported for render tests — pure function of the
  * list item.
  */
+/** The spaced-review nav row (2026-10-26): a third row under Teaching and
+ *  Practice with the due count as an accent badge; dimmed and inert when
+ *  nothing is due. Opening it lands on the practice draft pre-filled with
+ *  the due nodes. Exported for render tests. */
+export function ReviewNavRow({ dueCount, onOpen }: { dueCount: number; onOpen: () => void }) {
+	const due = dueCount > 0;
+	return (
+		<button
+			type="button"
+			data-testid="new-session-review"
+			onClick={onOpen}
+			disabled={!due}
+			className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-xs uppercase tracking-wider text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+		>
+			<RotateCcwIcon className="size-3" />
+			Review
+			{due && (
+				<span
+					data-testid="review-due-count"
+					className="ml-auto rounded-full bg-primary/15 px-1.5 py-px text-[11px] font-medium tabular-nums tracking-normal text-primary"
+				>
+					{dueCount}
+				</span>
+			)}
+			<span className="sr-only">{due ? `start a spaced review of ${dueCount} due nodes` : "nothing is due for review"}</span>
+		</button>
+	);
+}
+
 export function SessionRow({
 	chat,
 	active,
@@ -381,6 +410,8 @@ const KIND_FILTER_KEY = "lh:session-kind-filter";
 function SessionsSidebar() {
 	const { open, toggle } = useSidebar();
 	const [chats, setChats] = useState<ChatListItem[] | null>(null);
+	/** Spaced review: how many nodes are due (GET /api/review). */
+	const [reviewDue, setReviewDue] = useState(0);
 	const [query, setQuery] = useState("");
 	const [kindFilter, setKindFilter] = useState<SessionKindFilter>("all");
 	useEffect(() => {
@@ -435,6 +466,15 @@ function SessionsSidebar() {
 		} catch {
 			// a transient failure keeps the last snapshot
 			setChats((prev) => prev ?? []);
+		}
+		// The review count rides the same refresh: practice conclusions
+		// land with turn-settled, new nodes with the chats they came from.
+		try {
+			const res = await fetch("/api/review", { cache: "no-store" });
+			const d = (await res.json()) as { dueCount: number };
+			setReviewDue(d.dueCount);
+		} catch {
+			// a transient failure keeps the last count
 		} finally {
 			refreshInFlightRef.current = false;
 		}
@@ -706,6 +746,7 @@ function SessionsSidebar() {
 						Practice
 						<span className="sr-only">create a new practice session</span>
 					</button>
+					<ReviewNavRow dueCount={reviewDue} onOpen={() => router.push("/chat/new?mode=practice&review=1")} />
 				</div>
 
 				<div className="mx-3 mb-2 flex items-center gap-2">

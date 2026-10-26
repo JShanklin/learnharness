@@ -18,6 +18,12 @@ import type { ChatSettings, GraphSnapshot } from "@/src/core";
  *  bar lifts — resolved nodes as the learner SAW them at pick time. */
 export type DraftPick = { id: string; name: string; statement: string };
 
+/** The spaced-review draft's opening message (2026-10-26): the first
+ *  turn the practice agent reads — and the session's title. */
+export function reviewDraftText(count: number): string {
+	return `Spaced review: ${count} ${count === 1 ? "node" : "nodes"} due. Mix them, fresh situations, retest anything I miss.`;
+}
+
 /**
  * The sessionless draft view at /chat/new (owner, 2026-09-13): "+ New
  * session" opens THIS, never a created record — a session comes to exist
@@ -230,7 +236,17 @@ export function DraftShell({
 	);
 }
 
-export function NewSession({ initialConfigured, mode = "teach" }: { initialConfigured: boolean; mode?: "teach" | "practice" }) {
+export function NewSession({
+	initialConfigured,
+	mode = "teach",
+	review = false,
+}: {
+	initialConfigured: boolean;
+	mode?: "teach" | "practice";
+	/** ?review=1 (spaced review, 2026-10-26): pre-fill the practice draft
+	 *  with the due nodes and the review message; the learner sends it. */
+	review?: boolean;
+}) {
 	const router = useRouter();
 	const [text, setText] = useState("");
 	/* The draft MIRROR ("nothing gets lost" round, 2026-10-01): the shell's
@@ -253,6 +269,26 @@ export function NewSession({ initialConfigured, mode = "teach" }: { initialConfi
 		setPicks(next);
 	};
 	const [pickerOpen, setPickerOpen] = useState(false);
+	// SPACED REVIEW: one fetch on mount seeds the picks + the message —
+	// only while the draft is still untouched (nothing typed, nothing
+	// picked), so a slow response never overwrites the learner.
+	useEffect(() => {
+		if (!review || mode !== "practice") return;
+		let live = true;
+		void fetch("/api/review", { cache: "no-store" })
+			.then((r) => r.json() as Promise<{ due: DraftPick[] }>)
+			.then(({ due }) => {
+				if (!live || due.length === 0 || textRef.current !== "" || picksRef.current.length > 0) return;
+				applyPicks(due.map(({ id, name, statement }) => ({ id, name, statement })));
+				applyText(reviewDraftText(due.length));
+			})
+			.catch(() => {
+				/* an unreachable queue leaves a plain practice draft */
+			});
+		return () => {
+			live = false;
+		};
+	}, [review, mode]);
 	const [snapshot, setSnapshot] = useState<GraphSnapshot | null>(null);
 	const openPicker = () => {
 		if (snapshot) {
