@@ -73,7 +73,7 @@ export function AbortTurnBody({
 			{...backdropDismiss}
 		>
 			<div
-				className="mx-4 w-full max-w-sm rounded-xl border bg-card p-5 shadow-lg"
+				className="lh-glass mx-4 w-full max-w-sm rounded-2xl border bg-card p-5 shadow-lg"
 				onClick={(e) => e.stopPropagation()}
 			>
 				<h2 className="text-sm font-semibold text-card-foreground" data-testid="abort-turn-title">

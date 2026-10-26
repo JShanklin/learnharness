@@ -39,25 +39,30 @@ export function resolveAppearance(delta: AppearanceSettings | undefined) {
 	};
 }
 
-/** One channel clamped on the dark curve: additive offsets matching today's
- *  hand-picked palette (#141414 → card #1c1c1c (+8) → accent #2a2a2a (+22)
- *  → border #434343 (+47)) — the "per-mode derivation in code" the schema
- *  promises, as the thinnest curve that keeps the palette's relationships. */
-function raise(hex: string, add: number): string {
+/** One color raised on the dark curve, per channel (clamped at 255): the
+ *  offsets carry the "deep space" blue tint, so a chosen background's
+ *  surfaces lift toward blue the way the factory palette does
+ *  (#07090f → card #0d111a → accent #161c2a → border #232b3d). */
+function raise(hex: string, add: readonly [number, number, number]): string {
 	const n = hex.length === 4
 		? hex.slice(1).split("").map((c) => parseInt(c + c, 16))
 		: [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
-	return `#${n.map((c) => Math.min(255, c + add).toString(16).padStart(2, "0")).join("")}`;
+	return `#${n.map((c, i) => Math.min(255, c + add[i]!).toString(16).padStart(2, "0")).join("")}`;
 }
 
+/** The per-channel lifts from the background to each surface tier. */
+const CARD_LIFT = [6, 8, 11] as const;
+const ACCENT_LIFT = [15, 19, 27] as const;
+const BORDER_LIFT = [28, 34, 46] as const;
+
 /** The derived palette a chosen background implies (dark curve): background
- *  itself, the raised surfaces (card/popover/secondary/muted, +8), the
- *  accent (+22), the edges (border/input, +47), and primary-foreground
- *  (the inverted text on primary = the background's own color, as today). */
+ *  itself, the raised surfaces (card/popover/secondary/muted), the accent
+ *  surface, the edges (border/input), and primary-foreground (the dark
+ *  text on the accent = the background's own color). */
 export function derivedPalette(background: string): Record<string, string> {
-	const card = raise(background, 8);
-	const accent = raise(background, 22);
-	const border = raise(background, 47);
+	const card = raise(background, CARD_LIFT);
+	const accent = raise(background, ACCENT_LIFT);
+	const border = raise(background, BORDER_LIFT);
 	return {
 		"--background": background,
 		"--card": card,
@@ -78,15 +83,15 @@ export function appearanceVars(a: ReturnType<typeof resolveAppearance>): Record<
 	const vars: Record<string, string> = {};
 	if (a.background !== null) Object.assign(vars, derivedPalette(a.background));
 	if (a.fontFamily !== null) {
-		vars["--font-prose"] = `"${a.fontFamily}", var(--font-sans3), ui-sans-serif, system-ui, sans-serif`;
+		vars["--font-prose"] = `"${a.fontFamily}", var(--font-geist), ui-sans-serif, system-ui, sans-serif`;
 	}
 	// The ONE documented reading-size variable (typography round 4): prose,
 	// inputs, and session titles all read it, so one setProperty moves them.
 	vars["--lh-prose-size"] = `${a.proseFontSize}px`;
-	// Session names: CMU Serif by default; the toggle swaps the title font
-	// to the prose family — covers chat.tsx + new-session.tsx titles with
-	// zero component edits (they use the .font-title utility).
-	if (!a.sessionNameSerif) vars["--font-title"] = "var(--font-prose)";
+	// Session names: the prose family (Geist) by default; the toggle swaps
+	// the title font to CMU Serif — covers chat.tsx + new-session.tsx titles
+	// with zero component edits (they use the .font-title utility).
+	if (a.sessionNameSerif) vars["--font-title"] = `"lh-cmu", serif`;
 	// Markdown rendering: heading weight + the emphasis inks (the vars
 	// were built "ready for the settings UI").
 	vars["--lh-heading-weight"] = String(a.mdRendering.headingWeight);

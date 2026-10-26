@@ -399,10 +399,10 @@ export const FACTORY_SETTINGS: FactorySettings = {
 	general: { autoUpdate: true },
 	appearance: {
 		mode: "dark",
-		background: null, // the dark default (#141414) lives in the mode's derivation curve
-		fontFamily: null, // Source Sans 3
+		background: null, // the dark default (#07090f) lives in the stylesheet palette
+		fontFamily: null, // Geist
 		proseFontSize: 16,
-		sessionNameSerif: true,
+		sessionNameSerif: false,
 		mdRendering: { headingWeight: 900, boldColor: null, italicColor: null },
 	},
 	graph: { enabled: true, rendering: true, extractionChunkTokens: 4096 },

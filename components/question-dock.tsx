@@ -901,7 +901,7 @@ function QuestionDockForm({
 						<Button
 							type="submit"
 							disabled={!canSubmit || compactionRunning}
-							className="ml-auto h-9 rounded-[6px] px-3.5 text-sm font-medium"
+							className="lh-accent-btn ml-auto h-9 rounded-lg px-3.5 text-sm font-medium"
 						>
 							Submit answer
 						</Button>

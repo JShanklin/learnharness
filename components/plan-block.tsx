@@ -291,7 +291,7 @@ export function nodeWidth(lines: readonly string[]): number {
  *  geometry (half bleeds outside the extent) and the glow halo reaches −4 —
  *  without this pad the outermost node borders clip at the svg edge. */
 export const GRAPH_PAD = 8;
-/** The current node's yellow glow: a fill blurred so it bleeds over the
+/** The current node's accent glow: a fill blurred so it bleeds over the
  *  node's edges (owner). A Gaussian's visible spread is ≈3σ, so the glow
  *  reaches GLOW_MARGIN + 3·GLOW_BLUR past the node — any surface that
  *  shows the glow must pad its viewBox by GLOW_REACH or the blur clips
@@ -440,7 +440,7 @@ export function edgePathD(
 
 // The simple look (owner, plan-graph round 4): rectangular boxes, white
 // outlines/arrows/text; no fill on visited, today's gray look on upcoming,
-// and the current node carries a faint yellow glow (a blurred yellow fill
+// and the current node carries a faint accent glow (a blurred accent fill
 // bleeding over the edges). The IN-CHAT block is monochrome white instead
 // — no status language; the popup/window show the progression.
 const BOX: Record<PlanNodeStatus, string> = {
@@ -448,7 +448,7 @@ const BOX: Record<PlanNodeStatus, string> = {
 	// edge passing behind the box composites UNDER the fill — dimmed to
 	// half, not shown straight through (owner, round 9).
 	visited: "fill-background/50 stroke-white",
-	current: "fill-background/50 stroke-white",
+	current: "fill-background/50 stroke-primary",
 	// The grayed-out not-yet-visited look stays as-is (owner).
 	upcoming: "fill-card stroke-border",
 };
@@ -571,7 +571,7 @@ export function PlanDiagram({
 				>
 					<path d={ARROW_HEAD} className="fill-border" />
 				</marker>
-				{/* The current node's highlight: a faint yellow fill BLURRED so it
+				{/* The current node's highlight: a faint accent fill BLURRED so it
 				    bleeds out over the node's edges (owner). Generous filter region
 				    so the blur never clips at its own bounds. */}
 				<filter id={`${markerId}-glow`} x="-60%" y="-60%" width="220%" height="220%">
@@ -634,7 +634,7 @@ export function PlanDiagram({
 							strokeWidth={STROKE_W}
 						/>
 						{glow && (
-							// The current node's highlight: faint yellow, blurred so it
+							// The current node's highlight: faint accent, blurred so it
 							// bleeds over the edges — static, no pulse (owner, round 6).
 							// Paints ABOVE the box fill (owner, round 10): the round-9
 							// background fill no longer dims the glow inside the box,
@@ -644,7 +644,7 @@ export function PlanDiagram({
 								y={-GLOW_MARGIN}
 								width={w + 2 * GLOW_MARGIN}
 								height={h + 2 * GLOW_MARGIN}
-								className="fill-yellow-400/25"
+								className="fill-primary/30"
 								filter={`url(#${markerId}-glow)`}
 							/>
 						)}

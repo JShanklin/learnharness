@@ -24,7 +24,7 @@ import {
  * height is the diagram's canvas — quiz open, tall band, full plan);
  * folding the dock fades + blurs the whole thing out of existence. The
  * top-bar plan chip carries access at every width; the popup is the study
- * view. The viewBox pad clears the current node's blurred yellow halo
+ * view. The viewBox pad clears the current node's blurred accent halo
  * (GLOW_REACH) at the extent edges.
  */
 
